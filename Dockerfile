@@ -1,8 +1,20 @@
-FROM Python:3.11
+# Use the official Python image as the base image
+FROM python:3.10-slim
 
+# Set the working directory
 WORKDIR /app
 
-RUN apt-get update
-    python -m pip install Django==5.1.1
-    git clone https://github.com/django/django.git
-    python -m pip install -e django/
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY . .
+RUN pip install --no-cache-dir Django djangorestframework psycopg2-binary
+
+# Collect static files
+RUN python3 manage.py collectstatic --noinput
+
+# Command to run the application
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
