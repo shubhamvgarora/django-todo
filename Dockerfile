@@ -13,8 +13,5 @@ RUN apt-get update && apt-get install -y \
 COPY . .
 RUN pip install --no-cache-dir Django djangorestframework psycopg2-binary
 
-# Collect static files
-RUN python3 manage.py collectstatic --noinput
-
 # Command to run the application
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
